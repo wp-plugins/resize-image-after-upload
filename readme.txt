@@ -43,3 +43,8 @@ A. No. Although it is programmatically possible to extract that data
    first and put it somewhere in the metadata, which is not implemented
    off course, but a possibility, the data is lost in the process of
    resizing.
+
+== Changelog ==
+
+= 1.0 =
+* Created initial plugin.
