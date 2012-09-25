@@ -1,10 +1,10 @@
 === Resize Image After Upload ===
-Contributors: jepsonrae, huiz
-Donate link: http://www.jepsonrae.com/
+Contributors: jepsonrae
+Donate link: http://www.jepsonrae.com/?utm_medium=plugins&utm_campaign=referrals&utm_source=wp-resize-image-after-upload
 Tags: image, plugin, resize, upload
 Requires at least: 2.6
 Tested up to: 3.4.2
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,17 +34,15 @@ The plugin uses a class originally from Jacob Wyke (www.redvodkajelly.com) and i
 == Frequently Asked Questions == 
 
 Q. Why not reduce images in height?
-A. The reason I wrote the plugin was to stop breaking the layout with
-   images that are to large. Height is not always an issue. Maybe in
-   future this option will be added.
+A. The reason I wrote the plugin was to stop breaking the layout with images that are to large. Height is not always an issue. Maybe in future this option will be added.
 
 Q. Does it keep my EXIF data?
-A. No. Although it is programmatically possible to extract that data 
-   first and put it somewhere in the metadata, which is not implemented
-   off course, but a possibility, the data is lost in the process of
-   resizing.
+A. No. Although it is programmatically possible to extract that data first and put it somewhere in the metadata, which is not currently implemented, but a possibility for future releases.
 
 == Changelog ==
 
-= 1.0 =
+= 1.0.1 =
+* Update to read me, no feature updates unfortunately
+
+= 1.0.0 =
 * Created initial plugin.
