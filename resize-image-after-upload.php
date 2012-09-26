@@ -4,7 +4,7 @@ Plugin Name: Resize Image After Upload
 Plugin URI: http://www.jepsonrae.com 
 Description: This plugin resizes uploaded images to a given width after uploading, discarding the original uploaded file in the process.
 Author: Jepson+Rae
-Version: 1.0
+Version: 1.0.1
 Author URI: http://www.jepsonrae.com
 
 
