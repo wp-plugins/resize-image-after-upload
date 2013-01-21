@@ -1,22 +1,20 @@
 === Resize Image After Upload ===
 Contributors: jepsonrae
-Donate link: http://www.jepsonrae.com/?utm_medium=plugins&utm_campaign=referrals&utm_source=wp-resize-image-after-upload
+Donate link: http://www.jepsonrae.com/
 Tags: image, plugin, resize, upload
 Requires at least: 2.6
-Tested up to: 3.4.2
-Stable tag: 1.0.1
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tested up to: 3.5.0
+Stable tag: 1.1.0
 
-This plugin resizes uploaded images to a given width after uploading, discarding the original uploaded file in the process.
+This plugin resizes uploaded images to within a given maximum width and height after uploading, discarding the original uploaded file in the process.
 
 == Description ==
 
-The plugin affects the uploaded image after it is uploaded. Straight after it is uploaded, it it resized physically to the given width. There is no original image left, nor a backup made. This is deliberate to prevent wasted server space from enormous image files being stored. Unfortunately, this causes EXIF information to be lost.
+This plugin resizes uploaded images to within a given maximum width and height after uploading, discarding the original uploaded file in the process. The original image is destroyed to save space, and unfortunately EXIF data is lost due to this process.
 
-A lot of WordPress users or developers who use WordPress as a CMS and want to configure it for easy use, would like to have an option to resize uploaded images. Some images come straight from digital cameras and exceed 4000 pixels in width. So it would be nice to reduce that to the max width you use inside your WordPress theme.
+The requirement for this plugin is due to the fact that digital cameras and mobile phones now take pictures of over 4000x3000 pixels in dimension, and can range in size from a few MB, to 20MB. Having these original images stored on the server can quickly consume up valuable disk space. This plugin will reduce the size of the uploaded image at point of upload; then either WordPress or some other resize script such as TimThumb can then further reduce the image size to suit positioning in the website theme.
 
-If you would like to keep control of perfect sharpness when resizing, it would be better use photo editing tools on your computer, not a script like this.
+This plugin uses standard PHP resizing functions so resizing is not on par with what you could produce in Photoshop. However for the large majority of cases, this is not noticeable in the slightest.
 
 The plugin uses a class originally from Jacob Wyke (www.redvodkajelly.com) and is a direct update of another plugin called Resize at Upload which is no longer maintained.
 
@@ -24,25 +22,20 @@ The plugin uses a class originally from Jacob Wyke (www.redvodkajelly.com) and i
 
 1. Upload the plugin 'resize-image-after-upload' to the '/wp-content/plugins/' directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Make your settings through the 'Settings > Resize Image Upload' menu in WordPress
+3. Activate the resize function and set maximum width and height through the 'Settings > Resize Image Upload' menu in WordPress
 4. Upload images while writing posts and pages.
 
 == Screenshots ==
 
 1. Full preview of the settings screen
 
-== Frequently Asked Questions == 
-
-Q. Why not reduce images in height?
-A. The reason I wrote the plugin was to stop breaking the layout with images that are to large. Height is not always an issue. Maybe in future this option will be added.
-
-Q. Does it keep my EXIF data?
-A. No. Although it is programmatically possible to extract that data first and put it somewhere in the metadata, which is not currently implemented, but a possibility for future releases.
-
 == Changelog ==
 
+= 1.1.0 =
+* [Update] Added ability to set maximum height (thanks @Wonderm00n).
+
 = 1.0.1 =
-* Update to read me, no feature updates unfortunately
+* [Update] Update to read me, no feature updates unfortunately.
 
 = 1.0.0 =
-* Created initial plugin.
+* [Added] Initial release.

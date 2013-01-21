@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Resize Image After Upload
-Plugin URI: http://www.jepsonrae.com/?utm_medium=plugins&utm_campaign=referrals&utm_source=wp-resize-image-after-upload
-Description: This plugin resizes uploaded images to a given width after uploading, discarding the original uploaded file in the process.
+Plugin URI: http://www.jepsonrae.com/?utm_campaign=plugins&utm_source=wp-resize-image-after-upload&utm_medium=plugin-url
+Description: This plugin resizes uploaded images to a given width or height (whichever is the largest) after uploading, discarding the original uploaded file in the process.
 Author: Jepson+Rae
-Version: 1.0.1
-Author URI: http://www.jepsonrae.com/?utm_medium=plugins&utm_campaign=referrals&utm_source=wp-resize-image-after-upload
+Version: 1.1.0
+Author URI: http://www.jepsonrae.com/?utm_campaign=plugins&utm_source=wp-resize-image-after-upload&utm_medium=author-url
 
 
 
@@ -38,8 +38,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 $version = get_option('jr_resizeupload_version');
 if ($version == '') {
-  add_option('jr_resizeupload_version','1.0','Version of the plugin Resize After Image Upload','yes');
-  add_option('jr_resizeupload_width','1000','Resize image to this width','yes');
+  add_option('jr_resizeupload_version','1.1.0','Version of the plugin Resize After Image Upload','yes');
+  add_option('jr_resizeupload_width','1000','Resize image to this maximum width','yes');
+  add_option('jr_resizeupload_height','1000','Resize image to this maximum height','yes');
   add_option('jr_resizeupload_resize_yesno','yes','Resize image if yes (set to no instead of unloading the plugin)','yes');
 } // if
 
@@ -63,14 +64,19 @@ function jr_uploadresize_options_page(){
 function jr_uploadresize_options(){
   if (isset($_POST['jr_options_update'])) {
     $maxwidth = trim(mysql_real_escape_string($_POST['maxwidth']));
+    $maxheight = trim(mysql_real_escape_string($_POST['maxheight']));
     $yesno = $_POST['yesno'];
     
     // if input is empty or not an integer, use previous setting
     if ($maxwidth == '' OR ctype_digit(strval($maxwidth)) == FALSE) {
       $maxwidth = get_option('jr_resizeupload_width');
     } // if
+    if ($maxheight == '' OR ctype_digit(strval($maxheight)) == FALSE) {
+      $maxheight = get_option('jr_resizeupload_height');
+    } // if
     
     update_option('jr_resizeupload_width',$maxwidth);
+    update_option('jr_resizeupload_height',$maxheight);
     
     if ($yesno == 'yes') {
       update_option('jr_resizeupload_resize_yesno','yes');
@@ -86,6 +92,7 @@ function jr_uploadresize_options(){
 
   // get options and show settings form
   $maxwidth = get_option('jr_resizeupload_width');
+  $maxheight = get_option('jr_resizeupload_height');
   $yesno = get_option('jr_resizeupload_resize_yesno');
   
 
@@ -93,8 +100,8 @@ function jr_uploadresize_options(){
   echo('<form method="post" accept-charset="utf-8">');
     
   echo('<h2>Resize Image After Upload Options</h2>');
-  echo('<p>This plugin resizes uploaded images to a given width after uploading, discarding the original uploaded file in the process.
-   You can set the max width, and images (JPEG, PNG or GIF) will be resized automatically after they are uploaded.</p>');
+  echo('<p>This plugin resizes uploaded images to  given maximum width and/or height after uploading, discarding the original uploaded file in the process.
+   You can set the max width and max height, and images (JPEG, PNG or GIF) will be resized automatically after they are uploaded.</p>');
 
   echo('<p>Your file will be resized, there will not be a copy or backup with the original size.</p>');
   
@@ -115,10 +122,13 @@ function jr_uploadresize_options(){
     </tr>
   
     <tr>
-    <td>Max width:&nbsp;</td>
+    <td>Max width x height:&nbsp;</td>
     <td>
-    <input type="text" name="maxwidth" size="10" id="maxwidth" value="'.$maxwidth.'" /><br />
-    <small>Enter a valid max width in pixels (e.g. 500).</small>
+    <input type="text" name="maxwidth" size="10" id="maxwidth" value="'.$maxwidth.'" />
+    x
+    <input type="text" name="maxheight" size="10" id="maxheight" value="'.$maxheight.'" />
+    <br />
+    <small>Enter valid max width and height in pixels (e.g. 500).</small>
     </td>
     </tr>
     
@@ -142,9 +152,16 @@ function jr_uploadresize_resize($array){
     // there is a file to handle, so include the class and get the variables
     require_once('class.resize.php');
     $maxwidth = get_option('jr_resizeupload_width');
-    $objResize = new RVJ_ImageResize($array['file'], $array['file'], 'W', $maxwidth);
+    $maxheight = get_option('jr_resizeupload_height');
+    //$objResize = new RVJ_ImageResize($array['file'], $array['file'], 'W', $maxwidth);
+    $info=getimagesize($array['file']);
+    if ($info[0]>$info[1]) {
+    	//Resize by width
+    	$objResize = new RVJ_ImageResize($array['file'], $array['file'], 'W', $maxwidth);
+    } else {
+    	//Resize by height
+    	$objResize = new RVJ_ImageResize($array['file'], $array['file'], 'H', $maxheight);
+    }
   } // if
   return $array;
 } // function
-
-?>
