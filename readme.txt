@@ -10,7 +10,7 @@ This plugin resizes uploaded images to within a given maximum width and height a
 
 == Description ==
 
-This plugin resizes uploaded images to within a given maximum width and height after uploading, discarding the original uploaded file in the process. The original image is destroyed to save space, and unfortunately EXIF data is lost due to this process.
+This plugin resizes uploaded images to within a given maximum width and height after uploading, discarding the original uploaded file in the process. The original image is destroyed to save space, and unfortunately EXIF dataa is lost due to this process.
 
 The requirement for this plugin is due to the fact that digital cameras and mobile phones now take pictures of over 4000x3000 pixels in dimension, and can range in size from a few MB, to 20MB. Having these original images stored on the server can quickly consume up valuable disk space. This plugin will reduce the size of the uploaded image at point of upload; then either WordPress or some other resize script such as TimThumb can then further reduce the image size to suit positioning in the website theme.
 
