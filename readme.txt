@@ -4,7 +4,7 @@ Donate link: http://www.jepsonrae.com/
 Tags: image, plugin, resize, upload
 Requires at least: 2.6
 Tested up to: 3.5.0
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 
 This plugin resizes uploaded images to within a given maximum width and height after uploading, discarding the original uploaded file in the process.
 
@@ -30,6 +30,12 @@ The plugin uses a class originally from Jacob Wyke (www.redvodkajelly.com) and i
 1. Full preview of the settings screen
 
 == Changelog ==
+
+= 1.1.1 =
+* [Fix] Corrected functionality that sets default plugin options if the plugin version number changes.
+* [Fix] Adds default option for max-height value.
+* [Update] Updated the screenshot to include new maximum height field.
+* [Update] Increased the default maximum height and width to 1200px each. 
 
 = 1.1.0 =
 * [Update] Added ability to set maximum height (thanks @Wonderm00n).

@@ -3,14 +3,14 @@
 Plugin Name: Resize Image After Upload
 Plugin URI: http://www.jepsonrae.com/?utm_campaign=plugins&utm_source=wp-resize-image-after-upload&utm_medium=plugin-url
 Description: This plugin resizes uploaded images to a given width or height (whichever is the largest) after uploading, discarding the original uploaded file in the process.
-Author: Jepson+Rae
-Version: 1.1.0
+Author: Jepson Rae
+Version: 1.1.1
 Author URI: http://www.jepsonrae.com/?utm_campaign=plugins&utm_source=wp-resize-image-after-upload&utm_medium=author-url
 
 
 
 Copyright (C) 2008 A. Huizinga (original Resize at Upload plugin)
-Copyright (C) 2012 Jepson+Rae
+Copyright (C) 2012 Jepson Rae Ltd
 
 
 
@@ -36,12 +36,16 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-$version = get_option('jr_resizeupload_version');
-if ($version == '') {
-  add_option('jr_resizeupload_version','1.1.0','Version of the plugin Resize After Image Upload','yes');
-  add_option('jr_resizeupload_width','1000','Resize image to this maximum width','yes');
-  add_option('jr_resizeupload_height','1000','Resize image to this maximum height','yes');
-  add_option('jr_resizeupload_resize_yesno','yes','Resize image if yes (set to no instead of unloading the plugin)','yes');
+$PLUGIN_VERSION = '1.1.1';
+
+
+// Set the default plugin values
+if(get_option('jr_resizeupload_version') != $PLUGIN_VERSION) {
+
+  add_option('jr_resizeupload_version', $PLUGIN_VERSION, '','yes');
+  add_option('jr_resizeupload_width', '1200', '', 'yes');
+  add_option('jr_resizeupload_height','1200', '', 'yes');
+  add_option('jr_resizeupload_resize_yesno', 'yes', '','yes');
 } // if
 
   
@@ -55,13 +59,14 @@ if (get_option('jr_resizeupload_resize_yesno') == 'yes') {
 /* add option page */
 function jr_uploadresize_options_page(){
   if(function_exists('add_options_page')){
-    add_options_page('Resize Image After Upload','Resize Image Upload','manage_options','resize-after-upload','jr_uploadresize_options');
+    add_options_page('Resize Image After Upload', 'Resize Image Upload', 'manage_options', 'resize-after-upload', 'jr_uploadresize_options');
   } // if
 } // function
 
 
 /* the real option page */
 function jr_uploadresize_options(){
+
   if (isset($_POST['jr_options_update'])) {
     $maxwidth = trim(mysql_real_escape_string($_POST['maxwidth']));
     $maxheight = trim(mysql_real_escape_string($_POST['maxheight']));
@@ -85,7 +90,7 @@ function jr_uploadresize_options(){
       update_option('jr_resizeupload_resize_yesno','no');
     } // else
 
-    echo('<div id="message" class="updated fade"><p><strong>Your option are saved.</strong></p></div>');
+    echo('<div id="message" class="updated fade"><p><strong>Options have been updated.</strong></p></div>');
   } // if
 
 
@@ -105,8 +110,8 @@ function jr_uploadresize_options(){
 
   echo('<p>Your file will be resized, there will not be a copy or backup with the original size.</p>');
   
-  echo('<p>Set the option \'Resize\' to no if you don\'t want to resize, this way you shouldn\'t deactivate the plugin 
-   in case you don\'t want to resize for a while.</p>');
+  echo('<p>Set the option \'Resize\' to no if you want to disable resizing, this way you shouldn\'t need to deactivate the plugin 
+   if you don\'t want to resize for a while.</p>');
 
   echo('<h3>Settings</h3>
     <table class="form-table">
@@ -128,15 +133,16 @@ function jr_uploadresize_options(){
     x
     <input type="text" name="maxheight" size="10" id="maxheight" value="'.$maxheight.'" />
     <br />
-    <small>Enter valid max width and height in pixels (e.g. 500).</small>
+    <small>Enter valid max width and height in pixels (e.g. 1200).</small>
     </td>
     </tr>
     
     </table>');  
   
   echo('<p class="submit">
-  <input type="hidden" name="action" value="update" />
-  <input type="submit" name="jr_options_update" value="Update Options &raquo;" />
+  <input type="hidden" name="action" value="update" />  
+  <input id="submit" name="jr_options_update" class="button button-primary" type="submit" value="Update Options">
+  
   </p>
   </form>');
 
