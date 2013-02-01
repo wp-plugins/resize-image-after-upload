@@ -3,7 +3,7 @@ Contributors: jepsonrae
 Donate link: http://www.jepsonrae.com/
 Tags: image, plugin, resize, upload
 Requires at least: 2.6
-Tested up to: 3.5.0
+Tested up to: 3.5.1
 Stable tag: 1.1.1
 
 This plugin resizes uploaded images to within a given maximum width and height after uploading, discarding the original uploaded file in the process.
