@@ -4,13 +4,13 @@ Plugin Name: Resize Image After Upload
 Plugin URI: http://www.jepsonrae.com/?utm_campaign=plugins&utm_source=wp-resize-image-after-upload&utm_medium=plugin-url
 Description: This plugin resizes uploaded images to a given width or height (whichever is the largest) after uploading, discarding the original uploaded file in the process.
 Author: Jepson Rae
-Version: 1.1.1
+Version: 1.2.0
 Author URI: http://www.jepsonrae.com/?utm_campaign=plugins&utm_source=wp-resize-image-after-upload&utm_medium=author-url
 
 
 
 Copyright (C) 2008 A. Huizinga (original Resize at Upload plugin)
-Copyright (C) 2012 Jepson Rae Ltd
+Copyright (C) 2013 Jepson Rae Ltd
 
 
 
@@ -36,7 +36,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-$PLUGIN_VERSION = '1.1.1';
+$PLUGIN_VERSION = '1.2.0';
 
 
 // Set the default plugin values
@@ -151,23 +151,46 @@ function jr_uploadresize_options(){
 
 
 
-/* This function will apply changes to the uploaded file */
+/**
+* This function will apply changes to the uploaded file 
+* @param $array - contains file, url, type
+*/
 function jr_uploadresize_resize($array){ 
-  // $array contains file, url, type
-  if ($array['type'] == 'image/jpeg' OR $array['type'] == 'image/gif' OR $array['type'] == 'image/png') {
-    // there is a file to handle, so include the class and get the variables
+
+  if(
+  	$array['type'] == 'image/jpeg' || 
+  	$array['type'] == 'image/gif' || 
+  	$array['type'] == 'image/png') 
+  	
+  {
+
+    // Include the file to carry out the resizing
     require_once('class.resize.php');
-    $maxwidth = get_option('jr_resizeupload_width');
-    $maxheight = get_option('jr_resizeupload_height');
-    //$objResize = new RVJ_ImageResize($array['file'], $array['file'], 'W', $maxwidth);
-    $info=getimagesize($array['file']);
-    if ($info[0]>$info[1]) {
-    	//Resize by width
-    	$objResize = new RVJ_ImageResize($array['file'], $array['file'], 'W', $maxwidth);
-    } else {
-    	//Resize by height
-    	$objResize = new RVJ_ImageResize($array['file'], $array['file'], 'H', $maxheight);
-    }
-  } // if
+
+	// Get resizing limits
+    $max_width = get_option('jr_resizeupload_width');
+    $max_height = get_option('jr_resizeupload_height');
+
+	// Get original image sizes
+    $original_info = getimagesize($array['file']);
+    $original_width = $original_info[0];
+    $original_height = $original_info[1];
+	
+	// Perform the resize only if required, i.e. the image is larger than the max sizes
+	if($original_width > $max_width || $original_height > $max_height) {
+	
+		//Resize by width
+		if($original_width > $original_height) {
+			$objResize = new RVJ_ImageResize($array['file'], $array['file'], 'W', $max_width);
+		
+		} 
+	
+		//Resize by height
+		else {
+			$objResize = new RVJ_ImageResize($array['file'], $array['file'], 'H', $max_height);
+		}
+	}
+  } 
+  
   return $array;
 } // function
