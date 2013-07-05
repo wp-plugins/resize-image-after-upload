@@ -31,7 +31,7 @@ The plugin uses a class originally from Jacob Wyke (www.redvodkajelly.com) and i
 
 == Changelog ==
 
-= 1.3.0
+= 1.3.0 =
 * [update] Added ability to set the JPEG compression quality level when JPEGs are resized. Default is 90.
 
 = 1.2.0 =
