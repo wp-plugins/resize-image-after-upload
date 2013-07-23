@@ -64,8 +64,8 @@ class RVJ_ImageResize {
    var $arrResizedDetails;
    var $resOriginalImage; 
    var $resResizedImage;
-   var $numQuality = 95;
-   var $boolProtect = true;  
+   var $numQuality = 90;
+   var $boolProtect = true;
   
    /*  
    *  
@@ -81,8 +81,8 @@ class RVJ_ImageResize {
    *  
    */
   
-   function __constructor($strPath, $strSavePath, $strType = "W", $value = "150", $boolProtect = true, $numQuality = 95){
-      $this->RVJ_ImageResize($strPath, $strSavePath, $strType, $value); 
+   function __constructor($strPath, $strSavePath, $strType = "W", $value = "150", $boolProtect = true, $numQuality = 90){
+      $this->RVJ_ImageResize($strPath, $strSavePath, $strType, $value, $boolProtect, $numQuality); 
    }
   
    /*  
@@ -99,7 +99,7 @@ class RVJ_ImageResize {
    *  
    */
   
-   function RVJ_ImageResize($strPath, $strSavePath, $strType = "W", $value = "150", $boolProtect = true, $numQuality = 95){
+   function RVJ_ImageResize($strPath, $strSavePath, $strType = "W", $value = "150", $boolProtect = true, $numQuality = 90){
       //save the image/path details
       $this->strOriginalImagePath = $strPath;
       $this->strResizedImagePath = $strSavePath; 
@@ -200,7 +200,7 @@ class RVJ_ImageResize {
    *  
    */ 
 
-   function saveImage($numQuality = 95){
+   function saveImage($numQuality = 90){
       switch($this->arrResizedDetails['mime']){
          case "image/jpeg":
             imagejpeg($this->resResizedImage, $this->strResizedImagePath, $numQuality);
@@ -371,6 +371,14 @@ class RVJ_ImageResize {
       }else{
          $this->_resize((int)$size[0], (int)$size[1]);
       }
+   }
+   
+   
+   
+   function convertBmpToJpeg( $input_path, $output_path ) {
+   	  $image = imagecreatefromstring(file_get_contents($input_path));
+   	  imagejpeg($image, $output_path);
+   	  imagedestroy($image);}
    }
 }
 ?>

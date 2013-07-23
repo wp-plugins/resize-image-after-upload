@@ -4,7 +4,7 @@ Donate link: http://www.jepsonrae.com/?utm_campaign=plugins&utm_source=wp-resize
 Tags: image, plugin, resize, upload
 Requires at least: 2.6
 Tested up to: 3.5.2
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 
 This plugin resizes uploaded images to within a given maximum width and height after uploading, discarding the original uploaded file in the process.
 
@@ -31,8 +31,13 @@ The plugin uses a class originally from Jacob Wyke (www.redvodkajelly.com) and i
 
 == Changelog ==
 
+= 1.4.0 =
+* [Added] The ability to convert BMPs to JPEGs.
+* [Added] The ability to resize BMPs.
+* [Update] Can now select the JPEG quality using a dropdown.
+
 = 1.3.0 =
-* [update] Added ability to set the JPEG compression quality level when JPEGs are resized. Default is 90.
+* [Added] Ability to set the JPEG compression quality level when JPEGs are resized. Default is 90.
 
 = 1.2.0 =
 * [Update] Now only runs images through the resizer if required, i.e. the image is actually larger than the max height/width.
