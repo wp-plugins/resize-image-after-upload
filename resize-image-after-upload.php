@@ -4,7 +4,7 @@ Plugin Name: Resize Image After Upload
 Plugin URI: http://www.jepsonrae.com/?utm_campaign=plugins&utm_source=wp-resize-image-after-upload&utm_medium=plugin-url
 Description: This plugin resizes uploaded images to a given width or height (whichever is the largest) after uploading, discarding the original uploaded file in the process.
 Author: Jepson Rae
-Version: 1.4.0
+Version: 1.4.1
 Author URI: http://www.jepsonrae.com/?utm_campaign=plugins&utm_source=wp-resize-image-after-upload&utm_medium=author-url
 
 
@@ -36,7 +36,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-$PLUGIN_VERSION = '1.4.0';
+$PLUGIN_VERSION = '1.4.1';
 
 
 // Default plugin values
