@@ -4,7 +4,7 @@ Plugin Name: Resize Image After Upload
 Plugin URI: http://www.jepsonrae.com/?utm_campaign=plugins&utm_source=wp-resize-image-after-upload&utm_medium=plugin-url
 Description: This plugin resizes uploaded images to a given width or height (whichever is the largest) after uploading, discarding the original uploaded file in the process.
 Author: Jepson Rae
-Version: 1.4.1
+Version: 1.4.2
 Author URI: http://www.jepsonrae.com/?utm_campaign=plugins&utm_source=wp-resize-image-after-upload&utm_medium=author-url
 
 
@@ -36,7 +36,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-$PLUGIN_VERSION = '1.4.1';
+$PLUGIN_VERSION = '1.4.2';
 
 
 // Default plugin values
@@ -47,7 +47,7 @@ if(get_option('jr_resizeupload_version') != $PLUGIN_VERSION) {
   add_option('jr_resizeupload_height',				'1200', '', 'yes');
   add_option('jr_resizeupload_quality',				'90', '', 'yes');
   add_option('jr_resizeupload_resize_yesno', 		'yes', '','yes');
-  add_option('jr_resizeupload_convertbmp_yesno', 	'yes', '', 'yes');
+  add_option('jr_resizeupload_convertbmp_yesno', 	'no', '', 'no');
 }
 
 
@@ -157,7 +157,7 @@ function jr_uploadresize_options(){
 		<p>This plugin resizes uploaded images to given maximum width and/or height after uploading, discarding the original uploaded file in the process.
 	You can set the max width and max height, and images (JPEG, PNG or GIF) will be resized automatically after they are uploaded.</p>
 		
-		<p>If 'Convert BMPs to JPEGs' is enabled, then BMP files will also be resized.</p>
+		<!-- <p>If 'Convert BMPs to JPEGs' is enabled, then BMP files will also be resized.</p> -->
 
 		<p>Your file will be resized, there will not be a copy or backup with the original size.</p>
 
@@ -180,7 +180,8 @@ function jr_uploadresize_options(){
 				<td valign="top">
 					<input type="text" name="maxwidth" size="7" id="maxwidth" value="<?php echo $maxwidth; ?>" /> px-wide
 					<br /><input type="text" name="maxheight" size="7" id="maxheight" value="<?php echo $maxheight; ?>" /> px-high
-					<br /><small>Integer pixel value (e.g. 1200)</small>
+					<br /><small>Integer pixel value (e.g. 1200). </small>
+					<br /><small>Set to zero (0) to prevent resizing in that dimension.</small>
 					<br /><small>Recommended value: 1200</small>
 				</td>
 			</tr>
@@ -198,6 +199,7 @@ function jr_uploadresize_options(){
 				</td>
 			</tr>
 			
+<!-- 
 			<tr>
 				<td valign="top">Convert BMPs to JPEGs and resize:&nbsp;</td>
 				<td valign="top">
@@ -209,10 +211,11 @@ function jr_uploadresize_options(){
 					<br />Selecting 'No' will prevent BMPs from being resized</small>
 				</td>
 			</tr>
-
+ -->
 		</table>
 
 		<p class="submit" style="margin-top:20px;border-top:1px solid #eee;padding-top:20px;">
+		  <input type="hidden" id="convert-bmp" name="convertbmp" value="no" />
 		  <input type="hidden" name="action" value="update" />  
 		  <input id="submit" name="jr_options_update" class="button button-primary" type="submit" value="Update Options">
 		</p>
@@ -234,7 +237,7 @@ function jr_uploadresize_resize($array){
   	$array['type'] == 'image/jpeg' || 
   	$array['type'] == 'image/gif' || 
   	$array['type'] == 'image/png' || 
-  	$array['type'] == 'image/bmp'
+   	$array['type'] == 'image/bmp'
   )	
   {
 
@@ -259,16 +262,19 @@ function jr_uploadresize_resize($array){
 
 	
 	// Perform the resize only if required, i.e. the image is larger than the max sizes
-	if($original_width > $max_width || $original_height > $max_height || ($is_bitmap && $convert_bmp)) {
+	if( $original_width > $max_width || 
+		$original_height > $max_height || 
+		($is_bitmap && $convert_bmp)
+	) {
 	
 		//Resize by width
-		if($original_width > $original_height) {
+		if($original_width > $original_height && $max_width != 0) {
 			$objResize = new RVJ_ImageResize($array['file'], $array['file'], 'W', $max_width, true, $quality);
 		
 		} 
 	
 		//Resize by height
-		else {
+		else if($max_height != 0) {
 			$objResize = new RVJ_ImageResize($array['file'], $array['file'], 'H', $max_height, true, $quality);
 		}
 	}
