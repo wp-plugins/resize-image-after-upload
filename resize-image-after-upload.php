@@ -318,16 +318,15 @@ function jr_uploadresize_resize($array){
 				
 
 		// Perform resizing operations if reduction is required
-		if($original_width > $max_width || $original_height > $max_height) {
-		error_log('REDUCE');
+		if($original_width >= $max_width || $original_height >= $max_height) {
+
 			//Resize by width
 			if($original_width > $original_height && $max_width != 0) {
-					error_log('WIDER');
 				$objResize = new RVJ_ImageResize($array['file'], $array['file'], 'W', $max_width, $protect_image, $quality);
 			} 
 	
 			//Resize by height
-			else if($max_height != 0) {		error_log('HIGHER');
+			else if($max_height != 0) {		
 				$objResize = new RVJ_ImageResize($array['file'], $array['file'], 'H', $max_height, $protect_image, $quality);
 			}
 		}
