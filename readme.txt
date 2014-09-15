@@ -3,7 +3,7 @@ Contributors: jepsonrae
 Donate link: http://www.jepsonrae.com/?utm_campaign=plugins&utm_source=wp-resize-image-after-upload&utm_medium=donate-link
 Tags: image, plugin, resize, upload
 Requires at least: 3.5
-Tested up to: 3.9.1
+Tested up to: 4.0
 Stable tag: 1.5.0
 
 This plugin resizes uploaded images to within a given maximum width and height after uploading, discarding the original uploaded file in the process.
