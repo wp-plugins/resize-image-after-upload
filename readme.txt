@@ -1,6 +1,6 @@
 === Resize Image After Upload ===
 Contributors: jepsonrae
-Donate link: http://www.jepsonrae.com/?utm_campaign=plugins&utm_source=wp-resize-image-after-upload&utm_medium=donate-link
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q2GN4649CG9V6
 Tags: image, plugin, resize, upload
 Requires at least: 3.5
 Tested up to: 4.0
