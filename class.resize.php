@@ -64,7 +64,7 @@ class RVJ_ImageResize {
    var $arrResizedDetails;
    var $resOriginalImage; 
    var $resResizedImage;
-   var $numQuality = 95;
+   var $numQuality = 90;
    var $boolProtect = true;  
   
    /*  
@@ -200,7 +200,7 @@ class RVJ_ImageResize {
    *  
    */ 
 
-   function saveImage($numQuality = 95){
+   function saveImage($numQuality = 90){
       switch($this->arrResizedDetails['mime']){
          case "image/jpeg":
             imagejpeg($this->resResizedImage, $this->strResizedImagePath, $numQuality);

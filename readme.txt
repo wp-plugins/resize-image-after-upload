@@ -1,37 +1,46 @@
 === Resize Image After Upload ===
-Contributors: jepsonrae
+Contributors: iamphilrae
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3W4M254AA3KZG
-Tags: image, plugin, resize, upload
+Tags: image, processing, plugin, resize, upload, resizing, optimization, optimize, optimise, optimisation, downsize
 Requires at least: 3.5
 Tested up to: 4.0
-Stable tag: 1.5.0
+Stable tag: 1.6
 
-This plugin resizes uploaded images to within a given maximum width and height after uploading, discarding the original uploaded file in the process.
+Simple plugin to automatically resize uploaded images to within specified maximum width and height. Also has option to force recompression of JPEGs.
 
 == Description ==
 
-This plugin resizes uploaded images to within a given maximum width and height after uploading, discarding the original uploaded file in the process. The original image is destroyed to save space, and unfortunately EXIF dataa is lost due to this process.
+This plugin automatically resizes uploaded images (JPEG, GIF, and PNG) to within a given maximum width and/or height to reduce server space usage. This may be necessary due to the fact that images from digital cameras and smartphones can now be over 10MB each due to higher megapixel counts.
 
-The requirement for this plugin is due to the fact that digital cameras and mobile phones now take pictures of over 4000x3000 pixels in dimension, and can range in size from a few MB, to 20MB. Having these original images stored on the server can quickly consume up valuable disk space. This plugin will reduce the size of the uploaded image at point of upload; then either WordPress or some other resize script such as TimThumb can then further reduce the image size to suit positioning in the website theme.
+In addition, the plugin can force re-compression of uploaded JPEG images, regardless of whether they are resized or not; and convert uploaded GIF and PNG images into JPEG format.
 
-This plugin uses standard PHP resizing functions so resizing is not on par with what you could produce in Photoshop. However for the large majority of cases, this is not noticeable in the slightest.
+Note: the resizing/recompression process will discard the original uploaded file including EXIF data.
 
-The plugin uses a class originally from Jacob Wyke (www.redvodkajelly.com) and is a direct update of another plugin called Resize at Upload which is no longer maintained.
+This plugin is not intended to replace the WordPress add_image_size() function, but rather complement it. Use this plugin to ensure that no excessively large images are stored on your server, then use add_image_size() to create versions of the images suitable for positioning in your website theme.
+
+This plugin uses standard PHP image resizing functions and will require a high amount of memory (RAM) to be allocated to PHP in your php.ini file (e.g 512MB).
 
 == Installation ==
 
-1. Upload the plugin 'resize-image-after-upload' to the '/wp-content/plugins/' directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Activate the resize function and set maximum width and height through the 'Settings > Resize Image Upload' menu in WordPress
-4. Upload images while writing posts and pages.
+1. Upload the plugin 'resize-image-after-upload' to the '/wp-content/plugins/' directory.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. Edit the maxwidth/maxheight settings under 'Settings > Resize Image Upload'.
+4. Once active, just upload images as normal and it will just work!.
 
 == Screenshots ==
 
-1. Full preview of the settings screen
+1. Full preview of the settings screen.
 
 == Changelog ==
 
-= 1.5.0 =
+= 1.6 =
+* [Update] Tidied up the plugin settings page.
+* [Fix] Significant number of bug fixes through extensive testing.
+* [Fix] Resizing wasn't running on square images.
+* [FIX] Media upload was failing for BMP images.
+* [Fix] Replaced use of deprecated PHP functions with correct ones.
+
+= 1.5 =
 * [Added] Ability to force re-compression even if resize is not required.
 * [Fix] Compression quality value was not adhered to.
 
@@ -41,13 +50,13 @@ The plugin uses a class originally from Jacob Wyke (www.redvodkajelly.com) and i
 = 1.4.1 =
 * [Fix] Reverting code back to how it was in v1.3.0 after previous premature deployment of v1.4.0. Please use this version.
 
-= 1.4.0 =
+= 1.4 =
 * [Error] Code was deployed prematurely and should not have made its way to the live repository. Please do NOT use this version.
 
-= 1.3.0 =
+= 1.3 =
 * [Update] Added ability to set the JPEG compression quality level when JPEGs are resized. Default is 90.
 
-= 1.2.0 =
+= 1.2 =
 * [Update] Now only runs images through the resizer if required, i.e. the image is actually larger than the max height/width.
 
 = 1.1.1 =
@@ -56,11 +65,11 @@ The plugin uses a class originally from Jacob Wyke (www.redvodkajelly.com) and i
 * [Update] Updated the screenshot to include new maximum height field.
 * [Update] Increased the default maximum height and width to 1200px each. 
 
-= 1.1.0 =
+= 1.1 =
 * [Update] Added ability to set maximum height (thanks @Wonderm00n).
 
 = 1.0.1 =
 * [Update] Update to read me, no feature updates unfortunately.
 
-= 1.0.0 =
+= 1.0 =
 * [Added] Initial release.
