@@ -4,7 +4,7 @@ Plugin Name: Resize Image After Upload
 Plugin URI: https://wordpress.org/plugins/resize-image-after-upload/
 Description: Simple plugin to automatically resize uploaded images to within specified maximum width and height. Also has option to force recompression of JPEGs. Configuration options found under <a href="options-general.php?page=resize-after-upload">Settings > Resize Image Upload</a>
 Author: iamphilrae
-Version: 1.6
+Version: 1.6.1
 Author URI: http://www.philr.ae/
 
 Copyright (C) 2014 JEPSONRAE Ltd
@@ -30,7 +30,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-$PLUGIN_VERSION = '1.6';
+$PLUGIN_VERSION = '1.6.1';
 $DEBUG_LOGGER = false;
 
 
@@ -349,6 +349,8 @@ function jr_uploadresize_options(){
 */
 function jr_uploadresize_resize($image_data){ 
 
+  global $DEBUG_LOGGER;
+
   if(
   	$image_data['type'] == 'image/jpeg' || 
   	$image_data['type'] == 'image/jpg' || 
@@ -372,10 +374,10 @@ function jr_uploadresize_resize($image_data){
 		
 		
     $max_width  = get_option('jr_resizeupload_width')==0 
-      ? 9999999999999 : get_option('jr_resizeupload_width');
+      ? false : get_option('jr_resizeupload_width');
       
     $max_height = get_option('jr_resizeupload_height')==0 
-      ? 9999999999999 : get_option('jr_resizeupload_height');
+      ? false : get_option('jr_resizeupload_height');
 
 		    
     $convert_png_to_jpg = get_option('jr_resizeupload_convertpng_yesno');
@@ -412,64 +414,75 @@ function jr_uploadresize_resize($image_data){
     }
     
 
-if($DEBUG_LOGGER) error_log('LOG: '.print_r('Upload-start', true));				
+if($DEBUG_LOGGER) error_log('LOG: '.print_r('upload-start', true));				
 
 
 		// 
 		// Perform resizing operations if reduction is required
-		if($resizing_enabled 
-		  && ($original_width > $max_width || $original_height > $max_height) 
-		  && !$original_is_bmp) { // can't currently resize bitmaps
+		if(
+		  $resizing_enabled 
+		  && ($max_width || $max_height) // resize in at least one dimension
+		  && (
+		    ($max_width && ($original_width > $max_width)) // width possibly needs resizing
+		    || 
+		    ($max_height && ($original_height > $max_height)) // height possibly needs resizing
+		  )
+		  && !$original_is_bmp) // plugin does not work with bitmaps
+		{
+
+      if($DEBUG_LOGGER) error_log('LOG: '.print_r('--resizing', true));
 		  
-		  $protext_image = true;
+		  $protect_image = true;
+		  $resize_direction = null;
+		  $resize_max = null;
 
-if($DEBUG_LOGGER) error_log('LOG: '.print_r('--resizing', true));
+
+      // Width is unlimited, limit by height
+      if((!$max_width && $max_height) 
+        && ($original_height > $max_height)) { 
+        
+        $resize_direction = 'H';
+        $resize_max = $max_height;
+        if($DEBUG_LOGGER) error_log('LOG: '.print_r(' >--by-height (width-unlimited)', true));
+      }
+      
+      // Height is unlimited, limit by width
+      else if((!$max_height && $max_width) 
+        && ($original_width > $max_width)) {
+        
+        $resize_direction = 'W';
+        $resize_max = $max_width;
+        
+        if($DEBUG_LOGGER) error_log('LOG: '.print_r(' >--by-width (height-unlimited)', true));
+      }
+      
+      // Both dimensions require limiting, figure out which
+      else {
+        
+        if(($original_height/$max_height) > ($original_width/$max_width)) {
+          $resize_direction = 'H';
+          $resize_max = $max_height;
+          if($DEBUG_LOGGER) error_log('LOG: '.print_r(' >--by-height', true));
+        }
+        
+        else {
+          $resize_direction = 'W';
+          $resize_max = $max_width;
+          if($DEBUG_LOGGER) error_log('LOG: '.print_r(' >--by-width', true));
+        }
+      }
+
+		  if(!is_null($resize_direction) && !is_null($resize_max)) {
 		  
-      // Resize square images
-      if($original_width == $original_height) {
-
-if($DEBUG_LOGGER) error_log('LOG: '.print_r('----square -by-width', true));
-
-		    $resize_direction = 'W';
-		    $resize_max = $max_width;
-
-		    
-		    if($max_height < $max_width) {
-		      $resize_direction = 'H';
-		      $resize_max = $max_height; 
-		      
-if($DEBUG_LOGGER) error_log('LOG: '.print_r('----square -by-height', true));
-		    }
-		      
         $objResize = new RVJ_ImageResize(
           $image_data['file'], $image_data['file'], 
           $resize_direction, $resize_max, 
           $protect_image, $compression_level
         );
+        
+        
+        if($DEBUG_LOGGER) error_log('LOG: '.print_r(' >--resize-done', true));
       }
-      
-
-			// Resize by width1
-			else if($original_width > $original_height 
-			  && $original_height <= $max_height) {
-			  
-if($DEBUG_LOGGER) error_log('LOG: '.print_r('--by-width1', true));
-				$objResize = new RVJ_ImageResize($image_data['file'], $image_data['file'], 'W', $max_width, $protect_image, $compression_level);
-			} 
-			
-			// Resize by width2
-			else if($original_height > $original_width
-			  && $original_height <= $max_height) {
-
-if($DEBUG_LOGGER) error_log('LOG: '.print_r('--by-width2', true));			  
-				$objResize = new RVJ_ImageResize($image_data['file'], $image_data['file'], 'W', $max_width, $protect_image, $compression_level);
-      }
-	
-			// Resize by height
-			else {		
-if($DEBUG_LOGGER) error_log('LOG: '.print_r('--by-height', true));
-				$objResize = new RVJ_ImageResize($image_data['file'], $image_data['file'], 'H', $max_height, $protect_image, $compression_level);
-			}  		
     }  
 		
 		
@@ -480,20 +493,21 @@ if($DEBUG_LOGGER) error_log('LOG: '.print_r('--by-height', true));
 		  || ($original_is_gif && $convert_gif_to_jpg) 
 		  || ($original_is_bmp && $convert_bmp_to_jpg)) {
 		  
-if($DEBUG_LOGGER) error_log('LOG: '.print_r('--recompression/conversion', true));
-
-		  $protext_image = false;
+		  $protect_image = false;
+		  
 			$objResize = new RVJ_ImageResize($image_data['file'], $image_data['file'], 'P', 100, $protect_image, $compression_level);
+			
+			if($DEBUG_LOGGER) error_log('LOG: '.print_r('--recompression/conversion', true));
 		}
 		
 		
 		//
 		// No resizing, recompression, or conversion required
 		else {
-if($DEBUG_LOGGER) error_log('LOG: '.print_r('--no-action-required', true));
+      if($DEBUG_LOGGER) error_log('LOG: '.print_r('--no-action-required', true));
 		}
 
-if($DEBUG_LOGGER) error_log('LOG: '.print_r('--end', true));
+    if($DEBUG_LOGGER) error_log('LOG: '.print_r("end\n", true));
 		
   } // if(...) 
   
