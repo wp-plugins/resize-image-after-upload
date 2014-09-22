@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: image, processing, plugin, resize, upload, resizing, optimization, optimize, optimise, optimisation, downsize
 Requires at least: 3.5
 Tested up to: 4.0
-Stable tag: 1.6
+Stable tag: 1.6.1
 
 Simple plugin to automatically resize uploaded images to within specified maximum width and height. Also has option to force recompression of JPEGs.
 
@@ -33,7 +33,14 @@ This plugin uses standard PHP image resizing functions and will require a high a
 
 == Changelog ==
 
+= 1.6.1 =
+Fix a few edge case bugs, I go and break the main functionality - that's life! This is a maintenance release to fix a bug.
+
+* [Fix] Correct the logic behind which direction to perform resizing in.
+
 = 1.6 =
+This is a major maintenance release to squash a few long outstanding bugs.
+
 * [Update] Tidied up the plugin settings page.
 * [Fix] Significant number of bug fixes through extensive testing.
 * [Fix] Resizing wasn't running on square images.
