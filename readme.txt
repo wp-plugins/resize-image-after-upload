@@ -3,7 +3,7 @@ Contributors: iamphilrae
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3W4M254AA3KZG
 Tags: image, processing, plugin, resize, upload, resizing, optimization, optimize, optimise, optimisation, downsize
 Requires at least: 3.5
-Tested up to: 4.0
+Tested up to: 4.1
 Stable tag: 1.6.1
 
 Simple plugin to automatically resize uploaded images to within specified maximum width and height. Also has option to force recompression of JPEGs.
@@ -12,7 +12,7 @@ Simple plugin to automatically resize uploaded images to within specified maximu
 
 This plugin automatically resizes uploaded images (JPEG, GIF, and PNG) to within a given maximum width and/or height to reduce server space usage. This may be necessary due to the fact that images from digital cameras and smartphones can now be over 10MB each due to higher megapixel counts.
 
-In addition, the plugin can force re-compression of uploaded JPEG images, regardless of whether they are resized or not; and convert uploaded GIF and PNG images into JPEG format.
+In addition, the plugin can force re-compression of uploaded JPEG images, regardless of whether they are resized or not.
 
 Note: the resizing/recompression process will discard the original uploaded file including EXIF data.
 
@@ -32,6 +32,11 @@ This plugin uses standard PHP image resizing functions and will require a high a
 1. Full preview of the settings screen.
 
 == Changelog ==
+
+= 1.6.2 =
+Minor maintenance release:
+
+* [Fix] Correcting an error in the documentation.
 
 = 1.6.1 =
 Fix a few edge case bugs, I go and break the main functionality - that's life! This is a maintenance release to fix a bug.
@@ -70,7 +75,7 @@ This is a major maintenance release to squash a few long outstanding bugs.
 * [Fix] Corrected functionality that sets default plugin options if the plugin version number changes.
 * [Fix] Adds default option for max-height value.
 * [Update] Updated the screenshot to include new maximum height field.
-* [Update] Increased the default maximum height and width to 1200px each. 
+* [Update] Increased the default maximum height and width to 1200px each.
 
 = 1.1 =
 * [Update] Added ability to set maximum height (thanks @Wonderm00n).
