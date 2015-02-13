@@ -4,16 +4,10 @@ Plugin Name: Resize Image After Upload
 Plugin URI: https://wordpress.org/plugins/resize-image-after-upload/
 Description: Simple plugin to automatically resize uploaded images to within specified maximum width and height. Also has option to force recompression of JPEGs. Configuration options found under <a href="options-general.php?page=resize-after-upload">Settings > Resize Image Upload</a>
 Author: iamphilrae
-Version: 1.6.2
+Version: 1.7
 Author URI: http://www.philr.ae/
 
 Copyright (C) 2015 iamphilrae
-
-
-Includes hints and code by:
-	Huiz.net (www.huiz.net)
-  Jacob Wyke (www.redvodkajelly.com)
-  Paolo Tresso / Pixline (http://pixline.net)
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -30,7 +24,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-$PLUGIN_VERSION = '1.6.2';
+$PLUGIN_VERSION = '1.7';
 $DEBUG_LOGGER = false;
 
 
@@ -109,11 +103,11 @@ function jr_uploadresize_options(){
     $compression_level = ($compression_level == '') ? 1 : $compression_level;
     $compression_level = (ctype_digit(strval($compression_level)) == false) ? get_option('jr_resizeupload_quality') : $compression_level;
 
-    if($compression_level <= 0) {
+    if($compression_level < 1) {
     	$compression_level = 1;
     }
-    else if($compression_level >= 100) {
-    	$compression_level = 99;
+    else if($compression_level > 100) {
+    	$compression_level = 100;
     }
 
     update_option('jr_resizeupload_quality',$compression_level);
@@ -271,12 +265,12 @@ function jr_uploadresize_options(){
 				<th scope="row">JPEG compression level</th>
 				<td valign="top">
 					<select id="quality" name="quality">
-					<?php for($i=1; $i<=99; $i++) : ?>
+					<?php for($i=1; $i<=100; $i++) : ?>
 						<option value="<?php echo $i; ?>" <?php if($compression_level == $i) : ?>selected<?php endif; ?>><?php echo $i; ?></option>
 					<?php endfor; ?>
 					</select>
 					<p class="description"><code>1</code> = low quality (smallest files)
-					<br><code>99</code> = best quality (largest files)
+					<br><code>100</code> = best quality (largest files)
 					<br>Recommended value: <code>90</code></p>
 				</td>
 			</tr>
@@ -349,167 +343,126 @@ function jr_uploadresize_options(){
 */
 function jr_uploadresize_resize($image_data){
 
-  global $DEBUG_LOGGER;
 
-  if(
-  	$image_data['type'] == 'image/jpeg' ||
-  	$image_data['type'] == 'image/jpg' ||
-  	$image_data['type'] == 'image/gif' ||
-  	$image_data['type'] == 'image/png' ||
-   	$image_data['type'] == 'image/bmp'
-  )
-  {
-
-    // Include the file to carry out the resizing
-    require_once('class.resize.php');
+  jr_error_log("**-start--resize-image-upload");
 
 
-    $resizing_enabled = get_option('jr_resizeupload_resize_yesno');
-		$resizing_enabled = ($resizing_enabled=='yes') ? true : false;
+  $resizing_enabled = get_option('jr_resizeupload_resize_yesno');
+	$resizing_enabled = ($resizing_enabled=='yes') ? true : false;
 
-    $force_jpeg_recompression = get_option('jr_resizeupload_recompress_yesno');
-		$force_jpeg_recompression = ($force_jpeg_recompression=='yes') ? true : false;
+  $force_jpeg_recompression = get_option('jr_resizeupload_recompress_yesno');
+	$force_jpeg_recompression = ($force_jpeg_recompression=='yes') ? true : false;
 
-    $compression_level = get_option('jr_resizeupload_quality');
-
-
-    $max_width  = get_option('jr_resizeupload_width')==0
-      ? false : get_option('jr_resizeupload_width');
-
-    $max_height = get_option('jr_resizeupload_height')==0
-      ? false : get_option('jr_resizeupload_height');
+  $compression_level = get_option('jr_resizeupload_quality');
 
 
-    $convert_png_to_jpg = get_option('jr_resizeupload_convertpng_yesno');
-		$convert_png_to_jpg = ($convert_png_to_jpg=='yes') ? true : false;
+  $max_width  = get_option('jr_resizeupload_width')==0 ? false : get_option('jr_resizeupload_width');
 
-    $convert_gif_to_jpg = get_option('jr_resizeupload_convertgif_yesno');
-		$convert_gif_to_jpg = ($convert_gif_to_jpg=='yes') ? true : false;
-
-    $convert_bmp_to_jpg = get_option('jr_resizeupload_convertbmp_yesno');
-		$convert_bmp_to_jpg = ($convert_bmp_to_jpg=='yes') ? true : false;
+  $max_height = get_option('jr_resizeupload_height')==0 ? false : get_option('jr_resizeupload_height');
 
 
-		// Get original image sizes
-    $original_info = getimagesize($image_data['file']);
-    $original_width = $original_info[0];
-    $original_height = $original_info[1];
+  $convert_png_to_jpg = get_option('jr_resizeupload_convertpng_yesno');
+	$convert_png_to_jpg = ($convert_png_to_jpg=='yes') ? true : false;
 
-    $original_is_jpg = false;
-    $original_is_png = false;
-    $original_is_gif = false;
-    $original_is_bmp = false;
+  $convert_gif_to_jpg = get_option('jr_resizeupload_convertgif_yesno');
+	$convert_gif_to_jpg = ($convert_gif_to_jpg=='yes') ? true : false;
 
-    switch($image_data['type']) {
+  $convert_bmp_to_jpg = get_option('jr_resizeupload_convertbmp_yesno');
+	$convert_bmp_to_jpg = ($convert_bmp_to_jpg=='yes') ? true : false;
 
-      case 'image/jpg'  :
-      case 'image/jpeg' : $original_is_jpg = true; break;
 
-      case 'image/png'  : $original_is_png = true; break;
 
-      case 'image/gif'  : $original_is_gif = true; break;
+  //---------- In with the old v1.6.2, new v1.7 (WP_Image_Editor) ------------
 
-      case 'image/bmp'  : $original_is_bmp = true; break;
+  if($resizing_enabled || $force_jpeg_recompression) {
 
+    if(empty($image_data['file']) || empty($image_data['type'])) {
+      return $image_data;
     }
 
-
-if($DEBUG_LOGGER) error_log('LOG: '.print_r('upload-start', true));
-
-
-		//
-		// Perform resizing operations if reduction is required
-		if(
-		  $resizing_enabled
-		  && ($max_width || $max_height) // resize in at least one dimension
-		  && (
-		    ($max_width && ($original_width > $max_width)) // width possibly needs resizing
-		    ||
-		    ($max_height && ($original_height > $max_height)) // height possibly needs resizing
-		  )
-		  && !$original_is_bmp) // plugin does not work with bitmaps
-		{
-
-      if($DEBUG_LOGGER) error_log('LOG: '.print_r('--resizing', true));
-
-		  $protect_image = true;
-		  $resize_direction = null;
-		  $resize_max = null;
+    jr_error_log("--filename-( ".$image_data['file']." )");
+    $image_editor = wp_get_image_editor($image_data['file']);
+    $image_type = $image_data['type'];
 
 
-      // Width is unlimited, limit by height
-      if((!$max_width && $max_height)
-        && ($original_height > $max_height)) {
+    if(is_wp_error($image_editor)) {
+      jr_error_log("--wp-error-reported");
+    }
 
-        $resize_direction = 'H';
-        $resize_max = $max_height;
-        if($DEBUG_LOGGER) error_log('LOG: '.print_r(' >--by-height (width-unlimited)', true));
-      }
+    else {
 
-      // Height is unlimited, limit by width
-      else if((!$max_height && $max_width)
-        && ($original_width > $max_width)) {
+      $to_save = false;
+      $resized = false;
 
-        $resize_direction = 'W';
-        $resize_max = $max_width;
 
-        if($DEBUG_LOGGER) error_log('LOG: '.print_r(' >--by-width (height-unlimited)', true));
-      }
+      // Perform resizing if required
+      if($resizing_enabled) {
 
-      // Both dimensions require limiting, figure out which
-      else {
+        jr_error_log("--resizing-enabled");
+        $sizes = $image_editor->get_size();
 
-        if(($original_height/$max_height) > ($original_width/$max_width)) {
-          $resize_direction = 'H';
-          $resize_max = $max_height;
-          if($DEBUG_LOGGER) error_log('LOG: '.print_r(' >--by-height', true));
+        if((isset($sizes['width']) && $sizes['width'] > $max_width)
+          || (isset($sizes['height']) && $sizes['height'] > $max_height)) {
+
+          $image_editor->resize($max_width, $max_height, false);
+          $resized = true;
+          $to_save = true;
+
+          $sizes = $image_editor->get_size();
+          jr_error_log("--new-size--".$sizes['width']."x".$sizes['height']);
         }
-
         else {
-          $resize_direction = 'W';
-          $resize_max = $max_width;
-          if($DEBUG_LOGGER) error_log('LOG: '.print_r(' >--by-width', true));
+          jr_error_log("--no-resizing-needed");
         }
       }
-
-		  if(!is_null($resize_direction) && !is_null($resize_max)) {
-
-        $objResize = new RVJ_ImageResize(
-          $image_data['file'], $image_data['file'],
-          $resize_direction, $resize_max,
-          $protect_image, $compression_level
-        );
+      else {
+        jr_error_log("--no-resizing-requested");
+      }
 
 
-        if($DEBUG_LOGGER) error_log('LOG: '.print_r(' >--resize-done', true));
+      // Regardless of resizing, image must be saved if recompressing
+      if($force_jpeg_recompression && ($image_type=='image/jpg' || $image_type=='image/jpeg')) {
+
+        $to_save = true;
+        jr_error_log("--compression-level--q-".$compression_level);
+      }
+      elseif(!$resized) {
+        jr_error_log("--no-forced-recompression");
+      }
+
+
+      // Only save image if it has been resized or need recompressing
+      if($to_save) {
+
+        $image_editor->set_quality($compression_level);
+        $saved_image = $image_editor->save($image_data['file']);
+        jr_error_log("--image-saved");
+      }
+      else {
+        jr_error_log("--no-changes-to-save");
       }
     }
+  } // if($resizing_enabled || $force_jpeg_recompression)
 
+  else {
+    jr_error_log("--no-action-required");
+  }
 
-		//
-		// Resizing is not required, but still need to re-compress to desired quality and filetype
-		else if(($original_is_jpg && $force_jpeg_recompression)
-		  || ($original_is_png && $convert_png_to_jpg)
-		  || ($original_is_gif && $convert_gif_to_jpg)
-		  || ($original_is_bmp && $convert_bmp_to_jpg)) {
+  jr_error_log("**-end--resize-image-upload\n");
 
-		  $protect_image = false;
-
-			$objResize = new RVJ_ImageResize($image_data['file'], $image_data['file'], 'P', 100, $protect_image, $compression_level);
-
-			if($DEBUG_LOGGER) error_log('LOG: '.print_r('--recompression/conversion', true));
-		}
-
-
-		//
-		// No resizing, recompression, or conversion required
-		else {
-      if($DEBUG_LOGGER) error_log('LOG: '.print_r('--no-action-required', true));
-		}
-
-    if($DEBUG_LOGGER) error_log('LOG: '.print_r("end\n", true));
-
-  } // if(...)
 
   return $image_data;
 } // function jr_uploadresize_resize($image_data){
+
+
+/**
+* Simple debug logging function. Will only output to the log file
+* if 'debugging' is turned on.
+*/
+function jr_error_log($message) {
+  global $DEBUG_LOGGER;
+
+  if($DEBUG_LOGGER) {
+    error_log(print_r($message, true));
+  }
+}
