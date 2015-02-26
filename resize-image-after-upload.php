@@ -4,7 +4,7 @@ Plugin Name: Resize Image After Upload
 Plugin URI: https://wordpress.org/plugins/resize-image-after-upload/
 Description: Simple plugin to automatically resize uploaded images to within specified maximum width and height. Also has option to force recompression of JPEGs. Configuration options found under <a href="options-general.php?page=resize-after-upload">Settings > Resize Image Upload</a>
 Author: iamphilrae
-Version: 1.7
+Version: 1.7.1
 Author URI: http://www.philr.ae/
 
 Copyright (C) 2015 iamphilrae
@@ -24,7 +24,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-$PLUGIN_VERSION = '1.7';
+$PLUGIN_VERSION = '1.7.1';
 $DEBUG_LOGGER = false;
 
 
@@ -376,8 +376,16 @@ function jr_uploadresize_resize($image_data){
 
   if($resizing_enabled || $force_jpeg_recompression) {
 
+		$fatal_error_reported = false;
+		$valid_types = array('image/gif','image/png','image/jpeg','image/jpg');
+
     if(empty($image_data['file']) || empty($image_data['type'])) {
-      return $image_data;
+    	jr_error_log("--non-data-in-file-( ".print_r($image_data, true)." )");	
+		  $fatal_error_reported = true;
+    }
+    else if(!in_array($image_data['type'], $valid_types)) {
+    	jr_error_log("--non-image-type-uploaded-( ".$image_data['type']." )");
+		  $fatal_error_reported = true;
     }
 
     jr_error_log("--filename-( ".$image_data['file']." )");
@@ -385,10 +393,9 @@ function jr_uploadresize_resize($image_data){
     $image_type = $image_data['type'];
 
 
-    if(is_wp_error($image_editor)) {
+    if($fatal_error_reported || is_wp_error($image_editor)) {
       jr_error_log("--wp-error-reported");
     }
-
     else {
 
       $to_save = false;

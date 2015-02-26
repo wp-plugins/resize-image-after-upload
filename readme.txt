@@ -3,8 +3,8 @@ Contributors: iamphilrae
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3W4M254AA3KZG
 Tags: image, processing, plugin, resize, upload, resizing, optimization, optimize, optimise, optimisation, downsize
 Requires at least: 3.5
-Tested up to: 4.1
-Stable tag: 1.7
+Tested up to: 4.1.1
+Stable tag: 1.7.1
 
 Simple plugin to automatically resize uploaded images to within specified maximum width and height. Also has option to force recompression of JPEGs.
 
@@ -32,6 +32,12 @@ This plugin uses standard PHP image resizing functions and will require a high a
 1. Full preview of the settings screen.
 
 == Changelog ==
+
+= 1.7.1 =
+
+Release date: 26th February 2015
+
+* [Update] After reports of the plugin resizing PDF files, added check to ensure the plugin only attempts a resize on JPEG, GIF, and PNG file types other than relying on the response from WP_Image_Editor.
 
 = 1.7 =
 This is a major under-the-hood release to change core workings of the plugin. The plugin still functions as normal, but the way in which it resizes images has now changed to use standard WordPress libraries. This means that should your server have better image processing libraries than the GD default (e.g. ImageMagick), then the resizing method should make use of them. This should improve the output of your resized images!
