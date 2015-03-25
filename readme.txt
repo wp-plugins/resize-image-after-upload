@@ -6,19 +6,21 @@ Requires at least: 3.5
 Tested up to: 4.1.1
 Stable tag: 1.7.1
 
-Simple plugin to automatically resize uploaded images to within specified maximum width and height. Also has option to force recompression of JPEGs.
+A behind-the-scenes plugin which will automatically resize images as the are uploaded, to restrict their size to within a specified maximum width and height. Original images are discarded to save server space. Uses standard WordPress image resizing functions.
 
 == Description ==
 
-This plugin automatically resizes uploaded images (JPEG, GIF, and PNG) to within a given maximum width and/or height to reduce server space usage. This may be necessary due to the fact that images from digital cameras and smartphones can now be over 10MB each due to higher megapixel counts.
+This plugin automatically resizes images (JPEG, GIF, and PNG) when they are uploaded to within a given maximum width and/or height to reduce server space usage. This may be necessary due to the fact that images from digital cameras and smartphones can now be over 10MB each due to higher megapixel counts.
 
 In addition, the plugin can force re-compression of uploaded JPEG images, regardless of whether they are resized or not.
 
-Note: the resizing/recompression process will discard the original uploaded file including EXIF data.
+*NOTE1* This plugin will not resize images that have already been uploaded. 
+
+*NOTE2* the resizing/recompression process will discard the original uploaded file including EXIF data.
 
 This plugin is not intended to replace the WordPress add_image_size() function, but rather complement it. Use this plugin to ensure that no excessively large images are stored on your server, then use add_image_size() to create versions of the images suitable for positioning in your website theme.
 
-This plugin uses standard PHP image resizing functions and will require a high amount of memory (RAM) to be allocated to PHP in your php.ini file (e.g 512MB).
+This plugin uses standard WordPress image resizing functions and will require a high amount of memory (RAM) to be allocated to PHP in your php.ini file (e.g 512MB).
 
 == Installation ==
 
