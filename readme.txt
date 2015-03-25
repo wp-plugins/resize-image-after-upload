@@ -6,7 +6,7 @@ Requires at least: 3.5
 Tested up to: 4.1.1
 Stable tag: 1.7.1
 
-Behind-the-scenes plugin to automatically resize images when uploaded, to restrict size to within specified height/width. Uses standard WP functions.
+Behind-the-scenes plugin to automatically resize images when uploaded, restricting size to within specified maximum h/w. Uses standard WP functions.
 
 == Description ==
 
@@ -14,11 +14,11 @@ This plugin automatically resizes images (JPEG, GIF, and PNG) when they are uplo
 
 In addition, the plugin can force re-compression of uploaded JPEG images, regardless of whether they are resized or not.
 
-**NOTE 1** This plugin will not resize images that have already been uploaded. 
+**NOTE 1** - This plugin will *not* resize images that have already been uploaded. 
 
-**NOTE 2** the resizing/recompression process will discard the original uploaded file including EXIF data.
+**NOTE 2** - The resizing/recompression process will discard the original uploaded file including EXIF data.
 
-This plugin is not intended to replace the WordPress add_image_size() function, but rather complement it. Use this plugin to ensure that no excessively large images are stored on your server, then use add_image_size() to create versions of the images suitable for positioning in your website theme.
+This plugin is not intended to replace the WordPress *add_image_size()* function, but rather complement it. Use this plugin to ensure that no excessively large images are stored on your server, then use *add_image_size()* to create versions of the images suitable for positioning in your website theme.
 
 This plugin uses standard WordPress image resizing functions and will require a high amount of memory (RAM) to be allocated to PHP in your php.ini file (e.g 512MB).
 
